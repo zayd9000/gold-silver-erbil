@@ -1,20 +1,24 @@
-const goldApi = "https://data-asg.goldprice.org/dbXRates/USD"; // gold & silver in USD
-const exchangeApi = "https://api.exchangerate.host/latest?base=USD&symbols=IQD"; // USD to IQD
+const goldApi = "https://api.metals.live/v1/spot/gold";
+const silverApi = "https://api.metals.live/v1/spot/silver";
+const exchangeApi = "https://api.exchangerate.host/latest?base=USD&symbols=IQD";
 
 async function fetchPrices() {
   try {
-   
-    const goldRes = await fetch(goldApi);
-    const goldData = await goldRes.json();
-    const goldUSD = goldData.items[0].xauPrice; // gold USD/oz
-    const silverUSD = goldData.items[0].xagPrice; // silver USD/oz
+    // Get gold & silver in USD
+    const [goldRes, silverRes, exRes] = await Promise.all([
+      fetch(goldApi),
+      fetch(silverApi),
+      fetch(exchangeApi)
+    ]);
 
-    
-    const exRes = await fetch(exchangeApi);
+    const goldData = await goldRes.json();
+    const silverData = await silverRes.json();
     const exData = await exRes.json();
+
+    const goldUSD = goldData[0]; 
+    const silverUSD = silverData[0]; 
     const usdToIqd = exData.rates.IQD;
 
-    
     document.getElementById("gold-usd").textContent = goldUSD.toFixed(2);
     document.getElementById("gold-iqd").textContent = (goldUSD * usdToIqd).toFixed(0);
 
@@ -30,8 +34,8 @@ async function fetchPrices() {
   }
 }
 
-
+// Load prices on page load
 fetchPrices();
 
-
+// Refresh every 5 minutes
 setInterval(fetchPrices, 300000);
