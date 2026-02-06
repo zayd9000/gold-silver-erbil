@@ -1,4 +1,4 @@
-const apiURL = "https://raw.githubusercontent.com/zayd9000/free-gold-silver/main/prices.json"; // free JSON file
+const apiURL = "https://raw.githubusercontent.com/zayd9000/gold-silver-erbil/main/prices.json"; // free JSON file
 
 const exchangeApi = "https://api.exchangerate.host/latest?base=USD&symbols=IQD";
 
